@@ -19,14 +19,6 @@ data class Day(val date: Date?, val high: Double?, val low: Double?,val body: (d
 
     fun click(view: View) = body(this)
 
-//
-//        public fun click(view:View) {
-//            val calendar = Calendar.getInstance()
-//            calendar.time = date
-//            calendar.timeInMillis
-//            body?.invoke(calendar.timeInMillis)
-//
-//        }
 
     fun getTimestamp(): Long {
 
