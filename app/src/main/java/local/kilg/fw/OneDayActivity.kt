@@ -56,7 +56,7 @@ class OneDayActivity : AppCompatActivity() {
                     cursor.getLong(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_DATE)),
                     cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_HIGH)),
                     cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_LOW))
-            )
+            ){}
         }
 
         cursor?.close()
@@ -69,8 +69,6 @@ class OneDayActivity : AppCompatActivity() {
 
 
 }
-
-
 
 
 

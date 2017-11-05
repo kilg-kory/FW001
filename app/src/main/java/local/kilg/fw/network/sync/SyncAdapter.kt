@@ -36,7 +36,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                     weatherResponse -> insertWeatherResponseToDb(weatherResponse)
                 },{
 
-                    error -> Log.d("SYNC" , error.localizedMessage)
+                    error -> throw error
                 })
 
     }

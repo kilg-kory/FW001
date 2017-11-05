@@ -8,10 +8,8 @@
     tools:showIn="@layout/activity_main">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_forecast10_list"
+    <ListView
+        android:id="@+id/lv_forecast"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/forecast10_item"/>
-
+        android:layout_height="match_parent" />
 </android.widget.FrameLayout>

@@ -36,20 +36,6 @@ class FW_Provider : ContentProvider() {
         })
 
 
-//    override fun query(uri: Uri?,
-//                       projection: Array<out String>?,
-//                       selection: String?,
-//                       selectionArgs: Array<out String>?,
-//                       sortOrder: String?): Cursor = when(uriMatcher.match(uri)){
-//        ROUTE_DAYS -> context.database.use {
-//            query(FW_Contract.Day.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder)
-//        }
-//        ROUTE_DAY_DATE -> context.database.use {
-//            val id : String = uri!!.lastPathSegment
-//            query(FW_Contract.Day.TABLE_NAME, projection, "${FW_Contract.Day._ID} = ?", arrayOf(id), null, null, sortOrder)
-//        }
-//        else -> throw UnsupportedOperationException("Unknown uri $uri")
-//    }
 
 
     override fun query(uri: Uri?,
