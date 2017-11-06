@@ -6,6 +6,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import android.util.Log
+import local.kilg.fw.provider.FW_Contract.Day.TABLE_NAME
 import org.jetbrains.anko.db.transaction
 
 /**
@@ -74,17 +75,18 @@ class FW_Provider : ContentProvider() {
                 else -> throw UnsupportedOperationException("Unknown uri $uri")
             }
 
-    override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int =
-            when(uriMatcher.match(uri)){
-                ROUTE_DAYS -> context.database.use {
-                    delete(FW_Contract.Day.TABLE_NAME, selection, selectionArgs)
-                }
-                ROUTE_DAY_DATE -> context.database.use{
-                    val id : String = uri!!.lastPathSegment
-                    delete(FW_Contract.Day.TABLE_NAME, "${FW_Contract.Day._ID} = ?", arrayOf(id))
-                }
-                else -> throw UnsupportedOperationException("Unknown uri $uri")
+    override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
+         when (uriMatcher.match(uri)) {
+            ROUTE_DAYS -> {
+               return context.database.writableDatabase.delete(TABLE_NAME, selection, null)
             }
+            ROUTE_DAY_DATE -> {
+                val id: String = uri!!.lastPathSegment
+                return context.database.writableDatabase.delete(TABLE_NAME, "${FW_Contract.Day._ID}=?", arrayOf(id))
+            }
+            else -> throw UnsupportedOperationException("Unknown uri $uri")
+        }
+    }
 
     override fun getType(uri: Uri?): String = when(uriMatcher.match(uri)){
         ROUTE_DAYS -> FW_Contract.Day.CONTENT_TYPE

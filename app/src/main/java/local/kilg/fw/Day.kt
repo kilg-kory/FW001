@@ -8,13 +8,14 @@ import java.util.*
 /**
  * Created by kilg on 02.11.17.
  */
-data class Day(val date: Date?, val high: Double?, val low: Double?,val body: (date:Day) -> Unit ) {
+data class Day(val date: Date?, val high: Double?, val low: Double?, private val body: (date:Day) -> Unit ) {
     constructor(date: Long, high: Double, low: Double, body: (date:Day) -> Unit) : this(Date(date), high, low, body   )
     constructor(date: String, high: Double, low: Double, body: (date:Day) -> Unit) : this(Date(date.toLong()), high, low, body )
     constructor(): this(null, null, null, {})
 
     val strHigh = high.toString()
     val strLow = low.toString()
+
 
 
     fun click(view: View) = body(this)

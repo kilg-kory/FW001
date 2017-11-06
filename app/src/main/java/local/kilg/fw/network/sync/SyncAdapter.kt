@@ -22,8 +22,8 @@ import kotlin.collections.ArrayList
  * Created by kilg on 17.10.17/.
  */
 class SyncAdapter : AbstractThreadedSyncAdapter {
-    constructor(context: Context, autoInitialize: Boolean): super(context, autoInitialize)
-    constructor(context: Context, autoInitialize: Boolean, allowParallelSyncs: Boolean): super(context, autoInitialize, allowParallelSyncs)
+    constructor(context: Context, autoInitialize: Boolean) : super(context, autoInitialize)
+    constructor(context: Context, autoInitialize: Boolean, allowParallelSyncs: Boolean) : super(context, autoInitialize, allowParallelSyncs)
 
 
     override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult?) {
@@ -32,25 +32,23 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
         api.get10DayForecast()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe({
-                    weatherResponse -> insertWeatherResponseToDb(weatherResponse)
-                },{
+                .subscribe({ weatherResponse ->
+                    insertWeatherResponseToDb(weatherResponse)
+                }, {
 
-                    error -> throw error
+                    error ->
+                    throw error
                 })
 
     }
 
 
-
-
-    private fun insertWeatherResponseToDb(weatherResponse: WeatherResponse){
+    private fun insertWeatherResponseToDb(weatherResponse: WeatherResponse) {
         val forecast = weatherResponse.forecast!!.simpleforecast!!.forecastday
-        var contentValues : ArrayList<ContentValues> = ArrayList()
+        val contentValues: ArrayList<ContentValues> = ArrayList()
 
-        //select datetime from day w
-        //select last date and add to CV only if forecast > than last date
 
+        //select last date and add to content values only if forecast > than last date
         val cursor: Cursor? = context.contentResolver.query(
                 Uri.withAppendedPath(FW_Contract.BASE_CONTENT_URI, FW_Contract.PATH_DAYS),
                 arrayOf("MAX(${FW_Contract.Day.COLUMN_NAME_DATE})"), null, null, null
@@ -58,12 +56,14 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
         cursor?.moveToFirst()
         val maxDate: Long? = cursor?.getLong(cursor.getColumnIndex("max(${FW_Contract.Day.COLUMN_NAME_DATE})"))
 
+        //fill content values
+        //can be by insert if not exists...
         forecast?.forEach {
-            val date =  it!!.date!!.epoch!!.toLong()*1000
+            val date = it!!.date!!.epoch!!.toLong() * 1000
             val high = it.high!!.celsius!!.toDouble()
             val low = it.low!!.celsius!!.toDouble()
 
-            if(maxDate == null || date > maxDate){
+            if (maxDate == null || date > maxDate) {
                 val elem = ContentValues()
                 elem.put(FW_Contract.Day.COLUMN_NAME_DATE, date)
                 elem.put(FW_Contract.Day.COLUMN_NAME_TEMP_HIGH, high)
@@ -72,14 +72,24 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
             }
         }
 
+        //insert in one transaction
         val insertedValuesCount = context.contentResolver.bulkInsert(
                 Uri.withAppendedPath(FW_Contract.BASE_CONTENT_URI, FW_Contract.PATH_DAYS),
                 contentValues.toTypedArray()
         )
         Log.d("SYNC", "insert $insertedValuesCount vals")
+
+        //delete old value
+        val deletedValuesCount = context.contentResolver.delete(
+                FW_Contract.Day.CONTENT_URI,
+                "${FW_Contract.Day.COLUMN_NAME_DATE}<strftime('%s', 'now', 'localtime', '-3 day') * 1000",
+               arrayOf("")
+        )
+        Log.d("SYNC", "delete $deletedValuesCount vals")
     }
 
-    private fun logWeatherResponse(weatherResponse: WeatherResponse){
+
+    private fun logWeatherResponse(weatherResponse: WeatherResponse) {
 
         for (item in weatherResponse.forecast!!.simpleforecast!!.forecastday!!) {
             val date = Date(item!!.date!!.epoch!!.toLong() * 1000)
