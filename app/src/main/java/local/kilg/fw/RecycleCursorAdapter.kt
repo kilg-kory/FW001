@@ -8,9 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import local.kilg.fw.provider.FW_Contract
 import kotlinx.android.synthetic.main.forecast10_item.view.*
-
+import local.kilg.fw.provider.ForecastWeatherContract.Forecast
 
 /**
  * Created by kilg on 29.10.17.
@@ -26,12 +25,12 @@ class RecycleCursorAdapter(val context: Context, val cursor: Cursor?, listener: 
             if(view != null && cursor != null) {
 
 
-                val dayDate = cursor.getLong(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_DATE))
+                val dayDate = cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.DATE))
 
 
                 view.tv_date.text = dayDate.toString()
-                view.tv_high.text = cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_HIGH)).toString()
-                view.tv_low.text  = cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_LOW)).toString()
+                view.tv_high.text = cursor.getDouble(cursor.getColumnIndex(Forecast.COLUMN.TEMP_HIGH)).toString()
+                view.tv_low.text  = cursor.getDouble(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW)).toString()
                 view.setOnClickListener{listener(dayDate)}
             }
         }

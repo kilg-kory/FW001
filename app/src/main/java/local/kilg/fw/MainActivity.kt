@@ -54,13 +54,13 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+            //some code
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun createSyncAccount(context: Context) {
         val am: AccountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
-
         if (am.addAccountExplicitly(account, null, null)) {
             Log.d("SYNC", "Acc ok")
         } else {

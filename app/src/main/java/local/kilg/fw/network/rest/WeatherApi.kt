@@ -5,12 +5,10 @@ import local.kilg.fw.BuildConfig
 import local.kilg.fw.network.rest.pojo.WeatherResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 
 /**
  * Created by kilg on 16.10.17.
@@ -22,8 +20,7 @@ interface WeatherApi{
     fun get10DayForecast() : Observable<WeatherResponse>
 
 
-    @GET("forecast10day/q/CA/San_Francisco.json")
-    fun get10DayForecastClear() : Call<WeatherResponse>
+
 
 
     companion object Factory{

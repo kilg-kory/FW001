@@ -3,24 +3,22 @@ package local.kilg.fw.network.sync
 import android.accounts.Account
 import android.content.*
 import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import local.kilg.fw.network.rest.WeatherApi
 import local.kilg.fw.network.rest.pojo.WeatherResponse
-import local.kilg.fw.provider.FW_Contract
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import local.kilg.fw.provider.ForecastWeatherContract.Forecast
+
 
 /**
  * Created by kilg on 17.10.17/.
  */
+
+
 class SyncAdapter : AbstractThreadedSyncAdapter {
     constructor(context: Context, autoInitialize: Boolean) : super(context, autoInitialize)
     constructor(context: Context, autoInitialize: Boolean, allowParallelSyncs: Boolean) : super(context, autoInitialize, allowParallelSyncs)
@@ -50,42 +48,42 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
 
         //select last date and add to content values only if forecast > than last date
         val cursor: Cursor? = context.contentResolver.query(
-                Uri.withAppendedPath(FW_Contract.BASE_CONTENT_URI, FW_Contract.PATH_DAYS),
-                arrayOf("MAX(${FW_Contract.Day.COLUMN_NAME_DATE})"), null, null, null
+                Forecast.CONTENT_URI,
+                arrayOf("MAX(${Forecast.COLUMN.DATE})"), null, null, null
         )
         cursor?.moveToFirst()
-        val maxDate: Long? = cursor?.getLong(cursor.getColumnIndex("max(${FW_Contract.Day.COLUMN_NAME_DATE})"))
+        val maxDate: Long? = cursor?.getLong(cursor.getColumnIndex("max(${Forecast.COLUMN.DATE})"))
 
         //fill content values
         //can be by insert if not exists...
         forecast?.forEach {
-            val date = it!!.date!!.epoch!!.toLong() * 1000
-            val high = it.high!!.celsius!!.toDouble()
-            val low = it.low!!.celsius!!.toDouble()
-
-            if (maxDate == null || date > maxDate) {
+            if (maxDate == null || it!!.date!!.epoch!!.toLong() * 1000 > maxDate) {
                 val elem = ContentValues()
-                elem.put(FW_Contract.Day.COLUMN_NAME_DATE, date)
-                elem.put(FW_Contract.Day.COLUMN_NAME_TEMP_HIGH, high)
-                elem.put(FW_Contract.Day.COLUMN_NAME_TEMP_LOW, low)
+                elem.put(Forecast.COLUMN.DATE, it!!.date!!.epoch!!.toLong() * 1000)
+                elem.put(Forecast.COLUMN.TEMP_HIGH, it.high!!.celsius!!.toDouble())
+                elem.put(Forecast.COLUMN.TEMP_LOW, it.low!!.celsius!!.toDouble())
+                elem.put(Forecast.COLUMN.ICON, it.icon)
                 contentValues.add(elem)
             }
         }
 
         //insert in one transaction
         val insertedValuesCount = context.contentResolver.bulkInsert(
-                Uri.withAppendedPath(FW_Contract.BASE_CONTENT_URI, FW_Contract.PATH_DAYS),
+                Forecast.CONTENT_URI,
                 contentValues.toTypedArray()
         )
         Log.d("SYNC", "insert $insertedValuesCount vals")
 
         //delete old value
         val deletedValuesCount = context.contentResolver.delete(
-                FW_Contract.Day.CONTENT_URI,
-                "${FW_Contract.Day.COLUMN_NAME_DATE}<strftime('%s', 'now', 'localtime', '-3 day') * 1000",
-               arrayOf("")
+                Forecast.CONTENT_URI,
+                "${Forecast.COLUMN.DATE}<strftime('%s', 'now', 'localtime', '-3 day') * 1000",
+                arrayOf("")
         )
         Log.d("SYNC", "delete $deletedValuesCount vals")
+
+
+        cursor?.close()
     }
 
 

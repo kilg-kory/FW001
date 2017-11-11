@@ -8,8 +8,7 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import local.kilg.fw.databinding.ActivityOneDayBinding
-import local.kilg.fw.provider.FW_Contract
-
+import local.kilg.fw.provider.ForecastWeatherContract.Forecast
 
 class OneDayActivity : AppCompatActivity() {
 
@@ -21,11 +20,13 @@ class OneDayActivity : AppCompatActivity() {
             return intent
         }
 
+        //select fields
         private val projection = arrayOf(
-                FW_Contract.Day._ID,
-                FW_Contract.Day.COLUMN_NAME_DATE,
-                FW_Contract.Day.COLUMN_NAME_TEMP_HIGH,
-                FW_Contract.Day.COLUMN_NAME_TEMP_LOW
+                Forecast.COLUMN._ID,
+                Forecast.COLUMN.ICON,
+                Forecast.COLUMN.DATE,
+                Forecast.COLUMN.TEMP_HIGH,
+                Forecast.COLUMN.TEMP_LOW
         )
 
 
@@ -44,7 +45,7 @@ class OneDayActivity : AppCompatActivity() {
 
         val date: Long = intent.getLongExtra(DAY_DATE, 0L)
         val cursor: Cursor? = contentResolver.query(Uri.withAppendedPath(
-                FW_Contract.Day.CONTENT_URI, date.toString()),
+                Forecast.CONTENT_URI, date.toString()),
                 projection,
                 null, null, null
         )
@@ -53,9 +54,10 @@ class OneDayActivity : AppCompatActivity() {
             cursor.moveToFirst()
 
             mCurrentDay = Day(
-                    cursor.getLong(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_DATE)),
-                    cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_HIGH)),
-                    cursor.getDouble(cursor.getColumnIndex(FW_Contract.Day.COLUMN_NAME_TEMP_LOW))
+                    cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.DATE)),
+                    cursor.getString(cursor.getColumnIndex(Forecast.COLUMN.ICON)),
+                    cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_HIGH)),
+                    cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW))
             ){}
         }
 

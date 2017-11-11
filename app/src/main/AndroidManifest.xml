@@ -30,7 +30,7 @@
         </activity>
 
         <provider
-            android:name=".provider.FW_Provider"
+            android:name=".provider.ForecastWeatherProvider"
             android:authorities="local.kilg.fw"
             android:exported="true" />
 
