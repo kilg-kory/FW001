@@ -37,9 +37,23 @@ class ForecastWeatherContract {
             val TEMP_HIGH: String = "temp_high"
             val TEMP_LOW: String = "temp_low"
             val ICON: String = "icon"
+            val SUNRISE: String = "sunrise"
+            val SUNSET: String = "sunset"
+            val MOONRISE: String = "moonrise"
+            val MOONSET: String = "moonset"
+
         }
     }
 
+    object Region {
+        val TABLE_NAME: String = "region"
+
+        object COLUMN: BaseColumns {
+            val COUNTRY: String = "country"
+            val COUNTRY_SHORT: String = "country_short"
+            val CITY: String = "city"
+        }
+    }
 
     object Hour : BaseColumns {
         val TABLE_NAME: String = "hour"

@@ -1,6 +1,7 @@
 package local.kilg.fw
 
 import android.databinding.BindingAdapter
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import java.util.*
@@ -12,20 +13,32 @@ data class Day(val date: Date?,
                var icon: String?,
                val high: Int?,
                val low: Int?,
+               val sunrise: Date?,
+               val sunset: Date?,
+               val moonrise: Date?,
+               val moonset: Date?,
                private val body: (date: Day) -> Unit) {
+
     constructor(date: Long,
                 icon: String?,
                 high: Int,
                 low: Int,
-                body: (date: Day) -> Unit) : this(Date(date), icon, high, low, body)
+                sunrise: Long?,
+                sunset: Long?,
+                moonrise: Long?,
+                moonset: Long?,
+                body: (date: Day) -> Unit) : this(Date(date * 1000L), icon, high, low,
+            sunrise?.let { if (it != 0L) Date(it) else null }, sunset?.let { if (it != 0L) Date(it) else null },
+            moonrise?.let { if (it != 0L) Date(it) else null }, moonset?.let { if (it != 0L) Date(it) else null },
+            body)
 
-    constructor(date: String,
+    constructor(date: Long,
                 icon: String?,
                 high: Int,
                 low: Int,
-                body: (date: Day) -> Unit) : this(Date(date.toLong()), icon, high, low, body)
+                body: (date: Day) -> Unit) : this(Date(date * 1000L), icon, high, low, null, null, null, null, body)
 
-    constructor() : this(null, null, null, null, {})
+    constructor() : this(null, null, null, null, null, null, null, null, {})
 
 
     val strHigh = high.toString() + '\u2103'
@@ -37,17 +50,54 @@ data class Day(val date: Date?,
         get() {
             return if (date != null) {
                 calendar.time = date
-                calendar.get(Calendar.DAY_OF_MONTH).toString()
+                String.format("%td", calendar)
             } else {
                 ""
             }
         }
 
-    val strMonth: String
+    private fun strFormatter(format: String, calendar: Calendar, date: Date?): String {
+        return if (date != null) {
+            calendar.time = date
+            String.format(Locale.getDefault(), format, calendar)
+        }else{
+            ""
+        }
+    }
+
+    val strMonth: String = strFormatter("%tB", calendar, date)
+    val strSunrise: String
         get() {
-            return if (date != null) {
-                calendar.time = date
-                calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+            return if (sunrise != null) {
+                calendar.time = sunrise
+                String.format("%tR", calendar)
+            } else {
+                ""
+            }
+        }
+    val strSunset: String
+        get() {
+            return if (sunset != null) {
+                calendar.time = sunset
+                String.format("%tR", calendar)
+            } else {
+                ""
+            }
+        }
+    val strMoonrise: String
+        get() {
+            return if (moonrise != null) {
+                calendar.time = moonrise
+                String.format("%tR", calendar)
+            } else {
+                ""
+            }
+        }
+    val strMoonset: String
+        get() {
+            return if (moonset != null) {
+                calendar.time = moonset
+                String.format("%tR", calendar)
             } else {
                 ""
             }
@@ -56,10 +106,8 @@ data class Day(val date: Date?,
 
     fun click(view: View) = body(this)
 
-    fun getTimestamp(): Long {
-        val output = date!!.time / 1000L
-        val str = java.lang.Long.toString(output)
-        return java.lang.Long.parseLong(str) * 1000
+    fun getEpoch(): Long {
+        return date!!.time
 
     }
 

@@ -19,9 +19,9 @@
         android:layout_height="100dp"
         android:layout_margin="8dp"
         app:cardCornerRadius="10dp"
+        android:onClick="@{day::click}"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        android:onClick="@{day::click}">
+        app:cardUseCompatPadding="true">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

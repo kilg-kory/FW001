@@ -18,30 +18,99 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="56dp"
             android:text="@{day.date.toString()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="21.01.2017" />
 
         <TextView
             android:id="@+id/tv_high"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="143dp"
-            android:layout_marginTop="93dp"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="108dp"
             android:text="@{day.strHigh}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-25" />
 
         <TextView
             android:id="@+id/tv_low"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="85dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="148dp"
             android:text="@{day.strLow}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-27" />
+
+        <TextView
+            android:id="@+id/tv_sunrise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="108dp"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sunset"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5:50"
+            android:text="@{day.strSunrise}"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_sunset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_sunrise"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_sunrise"
+            tools:text="19:40"
+            android:text="@{day.strSunset}"/>
+
+        <TextView
+            android:id="@+id/tv_moonrise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_moonset"
+            app:layout_constraintEnd_toStartOf="@+id/tv_moonset"
+            app:layout_constraintTop_toTopOf="@+id/tv_moonset"
+            tools:text="21:00"
+            android:text="@{day.strMoonrise}"/>
+
+        <TextView
+            android:id="@+id/tv_moonset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="148dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="4:40"
+            android:text="@{day.strMoonset}"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="moon"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_moonrise"
+            app:layout_constraintEnd_toStartOf="@+id/tv_moonrise"
+            app:layout_constraintTop_toTopOf="@+id/tv_moonrise" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="sun"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_sunrise"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sunrise"
+            app:layout_constraintTop_toTopOf="@+id/tv_sunrise" />
     </android.support.constraint.ConstraintLayout>
 </layout>

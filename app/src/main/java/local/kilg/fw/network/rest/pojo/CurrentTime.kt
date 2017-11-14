@@ -4,11 +4,11 @@ import javax.annotation.Generated
 import com.google.gson.annotations.SerializedName
 
 @Generated("com.robohorse.robopojogenerator")
-data class SnowDay(
+data class CurrentTime(
 
-	@field:SerializedName("in")
-	val val_in: Double? = null,
+	@field:SerializedName("hour")
+	val hour: String? = null,
 
-	@field:SerializedName("cm")
-	val cm: Double? = null
+	@field:SerializedName("minute")
+	val minute: String? = null
 )

@@ -4,11 +4,11 @@ import javax.annotation.Generated
 import com.google.gson.annotations.SerializedName
 
 @Generated("com.robohorse.robopojogenerator")
-data class SnowDay(
+data class SunPhase(
 
-	@field:SerializedName("in")
-	val val_in: Double? = null,
+	@field:SerializedName("sunrise")
+	val sunrise: Sunrise? = null,
 
-	@field:SerializedName("cm")
-	val cm: Double? = null
+	@field:SerializedName("sunset")
+	val sunset: Sunset? = null
 )

@@ -2,6 +2,7 @@ package local.kilg.fw.network.rest
 
 import io.reactivex.Observable
 import local.kilg.fw.BuildConfig
+import local.kilg.fw.network.rest.pojo.Astronomy
 import local.kilg.fw.network.rest.pojo.WeatherResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,9 +17,11 @@ import retrofit2.http.GET
 
 interface WeatherApi{
 
-    @GET("forecast10day/q/CA/San_Francisco.json")
+    @GET("forecast10day/q/RU/Moscow.json")
     fun get10DayForecast() : Observable<WeatherResponse>
 
+    @GET("astronomy/q/RU/Moscow.json")
+    fun getAstronomy() : Observable<Astronomy>
 
 
 

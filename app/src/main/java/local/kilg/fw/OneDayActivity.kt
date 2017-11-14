@@ -7,16 +7,17 @@ import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import local.kilg.fw.databinding.ActivityOneDayBinding
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
 
 class OneDayActivity : AppCompatActivity() {
 
     companion object {
-        private val DAY_DATE = "date"
-        fun newIntent(context: Context, timeStamp: Long): Intent {
+        private val FORECAST_DATE = "date"
+        fun newIntent(context: Context, epoch: Long): Intent {
             val intent = Intent(context, OneDayActivity::class.java)
-            intent.putExtra(DAY_DATE, timeStamp)
+            intent.putExtra(FORECAST_DATE, epoch)
             return intent
         }
 
@@ -26,10 +27,12 @@ class OneDayActivity : AppCompatActivity() {
                 Forecast.COLUMN.ICON,
                 Forecast.COLUMN.DATE,
                 Forecast.COLUMN.TEMP_HIGH,
-                Forecast.COLUMN.TEMP_LOW
+                Forecast.COLUMN.TEMP_LOW,
+                Forecast.COLUMN.MOONSET,
+                Forecast.COLUMN.MOONRISE,
+                Forecast.COLUMN.SUNSET,
+                Forecast.COLUMN.SUNRISE
         )
-
-
     }
 
 
@@ -40,12 +43,15 @@ class OneDayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_one_day)
 
 
-        if (!intent.hasExtra(DAY_DATE))
-            throw IllegalStateException("field $DAY_DATE is missing for intent")
+        if (!intent.hasExtra(FORECAST_DATE)) {
+            throw IllegalStateException("field $FORECAST_DATE is missing for intent")
+        }
 
-        val date: Long = intent.getLongExtra(DAY_DATE, 0L)
+        val date: Long = intent.getLongExtra(FORECAST_DATE, 0L)
+
+
         val cursor: Cursor? = contentResolver.query(Uri.withAppendedPath(
-                Forecast.CONTENT_URI, date.toString()),
+                Forecast.CONTENT_URI, (date/1000L).toString()),
                 projection,
                 null, null, null
         )
@@ -57,17 +63,22 @@ class OneDayActivity : AppCompatActivity() {
                     cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.DATE)),
                     cursor.getString(cursor.getColumnIndex(Forecast.COLUMN.ICON)),
                     cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_HIGH)),
-                    cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW))
+                    cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW)),
+                    cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.SUNRISE)),
+                    cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.SUNSET)),
+                    cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.MOONRISE)),
+                    cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.MOONSET))
+
             ){}
+
+            val binding: ActivityOneDayBinding = DataBindingUtil.setContentView(this, R.layout.activity_one_day)
+            binding.day = mCurrentDay
         }
 
         cursor?.close()
 
-        val binding : ActivityOneDayBinding = DataBindingUtil.setContentView(this, R.layout.activity_one_day)
-        binding.day = mCurrentDay
 
     }
-
 
 
 }

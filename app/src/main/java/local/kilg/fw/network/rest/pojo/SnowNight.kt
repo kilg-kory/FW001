@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 data class SnowNight(
 
 	@field:SerializedName("in")
-	val val_in: Int? = null,
+	val val_in: Double? = null,
 
 	@field:SerializedName("cm")
-	val cm: Int? = null
+	val cm: Double? = null
 )

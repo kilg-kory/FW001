@@ -12,7 +12,6 @@ import android.support.v4.widget.CursorAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.forecast10_item.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import local.kilg.fw.databinding.Forecast10ItemBinding
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
@@ -89,7 +88,7 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                             cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW))
                     ) {
                         //on click action - open OneDayActivity with timestamp clicked day
-                        val intent:Intent = OneDayActivity.newIntent(activity, it.getTimestamp())
+                        val intent:Intent = OneDayActivity.newIntent(activity, it.getEpoch())
                         startActivity(intent)
                     }
 

@@ -6,6 +6,6 @@ import com.google.gson.annotations.SerializedName
 @Generated("com.robohorse.robopojogenerator")
 data class Features(
 
-	@field:SerializedName("forecast10day")
-	val forecast10day: Int? = null
+	@field:SerializedName("astronomy")
+	val astronomy: Int? = null
 )

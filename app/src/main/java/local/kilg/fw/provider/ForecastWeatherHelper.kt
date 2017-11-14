@@ -2,13 +2,15 @@ package local.kilg.fw.provider
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import org.jetbrains.anko.db.*
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
+import local.kilg.fw.provider.ForecastWeatherContract.Region
+import org.jetbrains.anko.db.*
+
 /**
  * Created by kilg on 13.10.17.
  */
 
-class ForecastWeatherHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "FW001", null, 2) {
+class ForecastWeatherHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "FW001", null, 3) {
     companion object {
         private var instance: ForecastWeatherHelper? = null
 
@@ -22,13 +24,39 @@ class ForecastWeatherHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "FW001"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.createTable(Forecast.TABLE_NAME, true,
+        db.createTable(Region.TABLE_NAME,
+                true,
+                Region.COLUMN._ID to SqlType.create("INTEGER PRIMARY KEY AUTOINCREMENT"),
+                Region.COLUMN.COUNTRY to TEXT,
+                Region.COLUMN.COUNTRY_SHORT to TEXT,
+                Region.COLUMN.CITY to TEXT
+        )
+
+        db.insert(Region.TABLE_NAME,
+                Region.COLUMN.COUNTRY to "Russia",
+                Region.COLUMN.COUNTRY_SHORT to "RU",
+                Region.COLUMN.CITY to "Moscow"
+        )
+
+        db.insert(Region.TABLE_NAME,
+                Region.COLUMN.COUNTRY to "Russia",
+                Region.COLUMN.COUNTRY_SHORT to "RU",
+                Region.COLUMN.CITY to "Saint_Petersburg"
+        )
+
+        db.createTable(Forecast.TABLE_NAME,
+                true,
                 Forecast.COLUMN._ID to SqlType.create("INTEGER PRIMARY KEY AUTOINCREMENT"),
                 Forecast.COLUMN.REGION to INTEGER,
-                Forecast.COLUMN.DATE to SqlType.create("DATE"),
-                Forecast.COLUMN.TEMP_HIGH to REAL,
-                Forecast.COLUMN.TEMP_LOW to REAL,
-                Forecast.COLUMN.ICON to TEXT
+                Forecast.COLUMN.DATE to INTEGER,
+                Forecast.COLUMN.TEMP_HIGH to INTEGER,
+                Forecast.COLUMN.TEMP_LOW to INTEGER,
+                Forecast.COLUMN.ICON to TEXT,
+                Forecast.COLUMN.SUNRISE to INTEGER,
+                Forecast.COLUMN.SUNSET to INTEGER,
+                Forecast.COLUMN.MOONRISE to INTEGER,
+                Forecast.COLUMN.MOONSET to INTEGER,
+                FOREIGN_KEY(Forecast.COLUMN.REGION, Region.TABLE_NAME, Region.COLUMN._ID)
         )
     }
 

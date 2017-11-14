@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.util.Log
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
 import org.jetbrains.anko.db.transaction
 
@@ -74,21 +75,29 @@ class ForecastWeatherProvider : ContentProvider() {
 
     override fun update(uri: Uri?, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int =
             when (uriMatcher.match(uri)) {
-                ROUTE_FORECAST -> context.database.use {
-                    update(Forecast.TABLE_NAME, values, selection, selectionArgs)
+                ROUTE_FORECAST -> {
+                    context.database.writableDatabase.update(Forecast.TABLE_NAME, values, selection, selectionArgs)
+                }
+                ROUTE_FORECAST_DATE -> {
+                    val date = uri!!.lastPathSegment
+                    val whereClause = " strftime('%m%d', date(date, 'unixepoch', 'localtime')) " +
+                            "= strftime('%m%d', date(?, 'unixepoch', 'localtime'))"
+
+                    Log.d("UPDATE", "select * forecast  where ${whereClause} + $date")
+                    context.database.writableDatabase.update(Forecast.TABLE_NAME, values, whereClause, arrayOf(date))
                 }
                 else -> throw UnsupportedOperationException("Unknown uri $uri")
             }
 
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
-        when (uriMatcher.match(uri)) {
+        return when (uriMatcher.match(uri)) {
             ROUTE_FORECAST -> {
                 //null in whereArgs because it not work or my hands grow out of ass.
-                return context.database.writableDatabase.delete(Forecast.TABLE_NAME, selection, null)
+                context.database.writableDatabase.delete(Forecast.TABLE_NAME, selection, null)
             }
             ROUTE_FORECAST_DATE -> {
                 val id: String = uri!!.lastPathSegment
-                return context.database.writableDatabase.delete(Forecast.TABLE_NAME, "${Forecast.COLUMN._ID}=?", arrayOf(id))
+                context.database.writableDatabase.delete(Forecast.TABLE_NAME, "${Forecast.COLUMN.DATE}=?", arrayOf(id))
             }
             else -> throw UnsupportedOperationException("Unknown uri $uri")
         }
