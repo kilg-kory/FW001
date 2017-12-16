@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+
     <dimen name="loading_window_animation_duration">1000</dimen>
     <dimen name="weather_icon_image_size">50</dimen>
 </resources>

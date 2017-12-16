@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:drawable/screen_background_dark_transparent"
     >
 
     <data>
@@ -16,9 +15,8 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="10dp"
+        android:layout_height="80dp"
+
         android:onClick="@{day::click}"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true">
