@@ -4,34 +4,44 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-
 import kotlinx.android.synthetic.main.activity_main.*
+import local.kilg.fw.network.Repository
+
 
 class MainActivity : AppCompatActivity() {
-
 
     private val ACCOUNT_NAME = "sync"
     private val ACCOUNT_TYPE = "local.kilg.fw"
     private val SYNC_INTERVAL = 60L * 60L * 12L  //in seconds
-
     private val account = Account(ACCOUNT_NAME, ACCOUNT_TYPE)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        /*
+        * If forecast is empty - go to splash activity to load data directly.
+        */
+        val repository = Repository(this)
+        if (repository.isEmpty()) {
+            val intent = Intent(this, SplashActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { _ ->
-            //TODO if data count = 0 > visible, exists data or on click -> gone
-            fab.visibility = View.GONE
-            demandSync()
-        }
+
 
         createSyncAccount(this)
 
@@ -54,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
-            //some code
+        //some code
             else -> super.onOptionsItemSelected(item)
         }
     }

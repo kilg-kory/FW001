@@ -1,5 +1,7 @@
 package local.kilg.fw
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -43,7 +45,7 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         //loader observe provider by default
-        return CursorLoader(activity,
+        return CursorLoader(context!!,
                 Forecast.CONTENT_URI,
                 projection,
                 null,
@@ -88,8 +90,9 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                             cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW))
                     ) {
                         //on click action - open OneDayActivity with timestamp clicked day
-                        val intent:Intent = OneDayActivity.newIntent(activity, it.getEpoch())
-                        startActivity(intent)
+                        val intent:Intent = OneDayActivity.newIntent(context!!, it.getEpoch())
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
+                        //startActivity(intent)
                     }
 
                     //export databind from tag and binding Day
