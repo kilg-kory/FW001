@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="sync_switch"
+        android:summary="@string/pref_description_auto_sync"
+        android:title="@string/pref_title_auto_sync" />
+
+    <ListPreference
+        android:defaultValue="RU/Moscow"
+        android:entries="@array/pref_city_list_titles"
+        android:entryValues="@array/pref_city_list_values"
+        android:key="@string/city_list_key"
+
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_city" />
+</PreferenceScreen>

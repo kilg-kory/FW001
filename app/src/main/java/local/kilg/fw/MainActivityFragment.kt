@@ -1,19 +1,25 @@
 package local.kilg.fw
 
 import android.app.ActivityOptions
+import android.app.PendingIntent
 import android.content.Intent
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.TaskStackBuilder
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_main.*
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
+import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Include in xml layout
@@ -29,9 +35,11 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             Forecast.COLUMN._ID,
             Forecast.COLUMN.ICON,
             Forecast.COLUMN.DATE,
+            Forecast.COLUMN.COUNTRY_CITY,
             Forecast.COLUMN.TEMP_HIGH,
             Forecast.COLUMN.TEMP_LOW
     )
+
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
         mAdapter.swapCursor(data)
@@ -41,14 +49,32 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         mAdapter.swapCursor(null)
     }
 
+
+    //restart loader by id in on resume method for show changes from settings.
+    // just until I know how update it from settings
+    private var LOADER_ID: Int = -1
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        //loader observe provider by default
+        LOADER_ID = id
+
+        val countryCityString = context!!.defaultSharedPreferences.getString(
+                resources.getString(R.string.city_list_key),
+                resources.getStringArray(R.array.pref_city_list_values)[0])!!
+
+        val uri = Uri.parse("${Forecast.CONTENT_URI}/$countryCityString")
+
+
         return CursorLoader(context!!,
-                Forecast.CONTENT_URI,
+                uri,
                 projection,
                 null,
                 null,
                 null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loaderManager.restartLoader(LOADER_ID, null, this)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -56,25 +82,16 @@ class MainActivityFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-
-        //Create Cursor Adapter and binding data to layout:
-
-        // redefine abstract class in place.
         mAdapter = RecycleCursorAdapter(this.context!!, null) {
-                        //on click action - open OneDayActivity with timestamp clicked day
-                        val intent:Intent = OneDayActivity.newIntent(context!!, it.getEpoch())
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
-                        //startActivity(intent)
-                    }
+            val intent: Intent = OneDayActivity.newIntent(context!!, it.getEpoch())
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
+        }
 
         val layoutManager = LinearLayoutManager(context)
         rv_forecast.layoutManager = layoutManager
         rv_forecast.adapter = mAdapter
-
 
         loaderManager.initLoader(0, null, this)
     }

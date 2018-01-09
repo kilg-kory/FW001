@@ -4,6 +4,26 @@
     <string name="content_description_weather_icon">weather icon</string>
     <string name="load_data_from_server">Loading…</string>
     <string name="heve_not_internet_connection">Have not internet connection</string>
+    <string name="title_activity_settings">Settings</string>
 
 
+    <string name="pref_title_auto_sync">Auto sync</string>
+    <string name="pref_description_auto_sync">Enable auto sync</string>
+
+
+    <string name="pref_title_city">City</string>
+    <string name="city_list_key">city_list</string>
+    <string name="default_city">RU/Moscow</string>
+    <string name="contentDescriptionNothing">nothing</string>
+    <string name="moon">moon</string>
+    <string name="sun">sun</string>
+
+    <string-array name="pref_city_list_titles">
+        <item>Mossscow</item>
+        <item>St Peeetersburg</item>
+    </string-array>
+    <string-array name="pref_city_list_values">
+        <item>RU/Moscow</item>
+        <item>RU/Saint_Petersburg</item>
+    </string-array>
 </resources>

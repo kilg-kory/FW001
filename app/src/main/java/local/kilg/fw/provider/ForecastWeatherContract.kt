@@ -4,9 +4,12 @@ import android.content.ContentResolver
 import android.net.Uri
 
 /**
- * Created by kilg on 11.10.17.
- */
+*  kilg on 11.10.17.
+*/
 class ForecastWeatherContract {
+
+
+
     companion object {
         val CONTENT_AUTORITY: String = "local.kilg.fw"
         val BASE_CONTENT_URI: Uri = Uri.parse("content://$CONTENT_AUTORITY")
@@ -41,22 +44,8 @@ class ForecastWeatherContract {
             val SUNSET: String = "sunset"
             val MOONRISE: String = "moonrise"
             val MOONSET: String = "moonset"
-
+            val COUNTRY_CITY: String = "country_city"
         }
-    }
-
-    object Region {
-        val TABLE_NAME: String = "region"
-
-        object COLUMN: BaseColumns {
-            val COUNTRY: String = "country"
-            val COUNTRY_SHORT: String = "country_short"
-            val CITY: String = "city"
-        }
-    }
-
-    object Hour : BaseColumns {
-        val TABLE_NAME: String = "hour"
     }
 
 }

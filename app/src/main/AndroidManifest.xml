@@ -8,20 +8,23 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <!-- Required to enable our SyncAdapter after it's created. -->
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <!-- Required because we're manually creating a mSyncAccountount. -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
     <!-- Required for checkin state of connection to internet in first connect splash activity -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <permission android:name="local.kilg.fw.LOCAL_PERM"  />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -33,12 +36,41 @@
             </intent-filter>
         </activity>
 
-        <provider
+        <activity
+            android:name=".OneDayActivity"
+            android:label="Put data day here"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".SplashActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <provider android:permission="local.kilg.fw.LOCAL_PERM"
             android:name=".provider.ForecastWeatherProvider"
             android:authorities="local.kilg.fw"
             android:exported="true" />
 
-        <service android:name=".network.sync.AuthenticatorService">
+        <service android:permission="local.kilg.fw.LOCAL_PERM" android:name=".network.sync.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -47,7 +79,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-        <service
+        <service android:permission="local.kilg.fw.LOCAL_PERM"
             android:name=".network.sync.SyncAdapterService"
             android:exported="true"
             android:process=":sync">
@@ -60,11 +92,6 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".OneDayActivity" />
-        <activity android:name=".SplashActivity"
-
-            android:theme="@style/AppTheme.NoActionBar">
-            </activity>
     </application>
 
 </manifest>

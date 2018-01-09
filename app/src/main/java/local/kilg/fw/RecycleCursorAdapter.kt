@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.DataSetObserver
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import local.kilg.fw.databinding.Forecast10ItemBinding
@@ -58,6 +59,7 @@ class RecycleCursorAdapter(val context: Context, var cursor: Cursor?, val listen
                     cursor.getInt(cursor.getColumnIndex(Forecast.COLUMN.TEMP_LOW)),
                     { listener(it) }
             )
+            Log.d("INCURSORCCS", cursor.getString(cursor.getColumnIndex(Forecast.COLUMN.COUNTRY_CITY)))
 
             binding.day = item
             binding.executePendingBindings()

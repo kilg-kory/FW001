@@ -8,10 +8,12 @@ import android.net.Uri
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import local.kilg.fw.R
 import local.kilg.fw.network.rest.WeatherApi
 import local.kilg.fw.network.rest.pojo.Astronomy
 import local.kilg.fw.network.rest.pojo.WeatherResponse
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
+import org.jetbrains.anko.defaultSharedPreferences
 import java.util.*
 
 /**
@@ -19,19 +21,19 @@ import java.util.*
  */
 
 class Repository(val context: Context) {
-    /*
-   *
-   * Инкапсулирует всю работу с ретрофитом и бд.
-   *
-   * */
 
+    private val countryCityString: String = context.defaultSharedPreferences.getString(
+            context.resources.getString(R.string.city_list_key),
+            context.resources.getStringArray(R.array.pref_city_list_values)[0])
 
     /**
      * Async load weather to database
      * */
     fun loadWeather() {
+
+
         val api = WeatherApi.create()
-        api.get10DayForecast()
+        api.get10DayForecast(countryCityString.split("/")[0], countryCityString.split("/")[1])
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ weatherResponse ->
@@ -46,7 +48,7 @@ class Repository(val context: Context) {
      * */
     fun loadAstronomy() {
         val api = WeatherApi.create()
-        api.getAstronomy()
+        api.getAstronomy(countryCityString.split("/")[0], countryCityString.split("/")[1])
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ astronomy ->
@@ -100,10 +102,9 @@ class Repository(val context: Context) {
         contentValues.put(Forecast.COLUMN.SUNSET, sunset)
         contentValues.put(Forecast.COLUMN.MOONRISE, moonrise)
         contentValues.put(Forecast.COLUMN.MOONSET, moonset)
-
         val currentDate = (Calendar.getInstance().timeInMillis) / 1000L
-        context.contentResolver.update(Uri.withAppendedPath(Forecast.CONTENT_URI, currentDate.toString()),
-                contentValues, null, null)
+        val uri = Uri.parse("${Forecast.CONTENT_URI}/$countryCityString/$currentDate")
+        context.contentResolver.update(uri, contentValues, null, null)
     }
 
     private fun insertWeatherToDb(weatherResponse: WeatherResponse) {
@@ -111,8 +112,10 @@ class Repository(val context: Context) {
         val contentValues: ArrayList<ContentValues> = ArrayList()
 
         //select last date and add to content values only if forecast > than last date
+        val uri = Uri.parse("${Forecast.CONTENT_URI}/$countryCityString")
+
         val cursor: Cursor? = context.contentResolver.query(
-                Forecast.CONTENT_URI,
+                uri,
                 arrayOf("MAX(${Forecast.COLUMN.DATE}) as max"), null, null, null
         )
         cursor?.moveToFirst()
@@ -127,13 +130,14 @@ class Repository(val context: Context) {
                 elem.put(Forecast.COLUMN.TEMP_HIGH, it.high!!.celsius!!.toDouble())
                 elem.put(Forecast.COLUMN.TEMP_LOW, it.low!!.celsius!!.toDouble())
                 elem.put(Forecast.COLUMN.ICON, it.icon)
+                elem.put(Forecast.COLUMN.COUNTRY_CITY, countryCityString)
                 contentValues.add(elem)
             }
         }
 
         //insert in one transaction
         context.contentResolver.bulkInsert(
-                Forecast.CONTENT_URI,
+                Uri.parse("${Forecast.CONTENT_URI}/$countryCityString"),
                 contentValues.toTypedArray()
         )
 
@@ -150,15 +154,18 @@ class Repository(val context: Context) {
 
 
     fun isOnline(): Boolean {
-        val connectivity: ConnectivityManager =  context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivity: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivity.activeNetworkInfo
         return networkInfo.isConnectedOrConnecting
 
     }
 
     fun isEmpty(): Boolean {
+
+        val uri = Uri.parse("${Forecast.CONTENT_URI}/$countryCityString")
+
         val cursor = context.contentResolver.query(
-                Forecast.CONTENT_URI,
+                uri,
                 arrayOf("count(*) AS count"),
                 null,
                 null,
@@ -167,8 +174,6 @@ class Repository(val context: Context) {
         cursor.moveToFirst()
         val count = cursor.getInt(0)
         cursor.moveToFirst()
-
-        Log.e("DATABASE", "count return - " + count)
 
         cursor.close()
         return count == 0

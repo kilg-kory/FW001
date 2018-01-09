@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="moon"
+            android:text="@string/moon"
             app:layout_constraintBottom_toBottomOf="@+id/tv_moonrise"
             app:layout_constraintEnd_toStartOf="@+id/tv_moonrise"
             app:layout_constraintTop_toTopOf="@+id/tv_moonrise" />
@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="sun"
+            android:text="@string/sun"
             app:layout_constraintBottom_toBottomOf="@+id/tv_sunrise"
             app:layout_constraintEnd_toStartOf="@+id/tv_sunrise"
             app:layout_constraintTop_toTopOf="@+id/tv_sunrise" />

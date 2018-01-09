@@ -7,9 +7,12 @@ import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.NavUtils
 import android.util.Log
+import android.view.MenuItem
 import local.kilg.fw.databinding.ActivityOneDayBinding
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
+import org.jetbrains.anko.defaultSharedPreferences
 
 class OneDayActivity : AppCompatActivity() {
 
@@ -35,6 +38,20 @@ class OneDayActivity : AppCompatActivity() {
         )
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null) {
+            return when (item.itemId) {
+                android.R.id.home -> {
+//                    NavUtils.navigateUpFromSameTask(this)
+                    onBackPressed()
+                    true
+                }
+                else -> return super.onOptionsItemSelected(item)
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private lateinit var mCurrentDay: Day
 
@@ -43,6 +60,8 @@ class OneDayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_one_day)
 
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         if (!intent.hasExtra(FORECAST_DATE)) {
             throw IllegalStateException("field $FORECAST_DATE is missing for intent")
         }
@@ -50,8 +69,15 @@ class OneDayActivity : AppCompatActivity() {
         val date: Long = intent.getLongExtra(FORECAST_DATE, 0L)
 
 
-        val cursor: Cursor? = contentResolver.query(Uri.withAppendedPath(
-                Forecast.CONTENT_URI, (date/1000L).toString()),
+        val countryCityString = defaultSharedPreferences.getString(
+                resources.getString(R.string.city_list_key),
+                resources.getStringArray(R.array.pref_city_list_values)[0])
+
+        val queryUri = Uri.parse("${Forecast.CONTENT_URI}/$countryCityString/${(date / 1000L)}")
+        Log.d("QUERYURISTRING", "query uri for one entry - $queryUri")
+
+        val cursor: Cursor? = contentResolver.query(
+                queryUri,
                 projection,
                 null, null, null
         )
@@ -69,9 +95,9 @@ class OneDayActivity : AppCompatActivity() {
                     cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.MOONRISE)),
                     cursor.getLong(cursor.getColumnIndex(Forecast.COLUMN.MOONSET))
 
-            ){}
+            ) {}
 
-            val binding: ActivityOneDayBinding = DataBindingUtil.setContentView(this, R.layout.activity_one_day)
+            val binding: ActivityOneDayBinding = DataBindingUtil.setContentView(this, R.layout.activity_one_day)!!
             binding.day = mCurrentDay
         }
 

@@ -10,18 +10,19 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
- * Created by kilg on 16.10.17.
- */
+*  kilg on 16.10.17.
+*/
 
 interface WeatherApi{
 
-    @GET("forecast10day/q/RU/Moscow.json")
-    fun get10DayForecast() : Observable<WeatherResponse>
+    @GET("forecast10day/q/{country}/{city}.json")
+    fun get10DayForecast(@Path("country") country:String, @Path("city") city: String) : Observable<WeatherResponse>
 
-    @GET("astronomy/q/RU/Moscow.json")
-    fun getAstronomy() : Observable<Astronomy>
+    @GET("astronomy/q/{country}/{city}.json")
+    fun getAstronomy(@Path("country") country:String, @Path("city") city:String) : Observable<Astronomy>
 
 
 
