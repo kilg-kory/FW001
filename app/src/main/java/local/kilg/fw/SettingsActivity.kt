@@ -27,17 +27,12 @@ class SettingsActivity : PreferenceActivity() {
             ContentResolver.setIsSyncable(account, ACCOUNT_TYPE, 1)
             ContentResolver.setSyncAutomatically(account, ACCOUNT_TYPE, true)
             ContentResolver.addPeriodicSync(account, ACCOUNT_TYPE, Bundle.EMPTY, SYNC_INTERVAL)
-
-            Log.d("SYNCISACTIVE", "is sync active return ${ContentResolver.getPeriodicSyncs(account, ACCOUNT_TYPE).size}")
-
-
         }
 
         private fun disablePeriodicSync(context: Context) {
             ContentResolver.cancelSync(account, ACCOUNT_TYPE)
             ContentResolver.removePeriodicSync(account, ACCOUNT_TYPE, Bundle.EMPTY)
             removeSyncAccount(context)
-            Log.d("SYNCISACTIVE", "is sync active return ${ContentResolver.getPeriodicSyncs(account, ACCOUNT_TYPE).size}")
         }
 
 
@@ -69,8 +64,10 @@ class SettingsActivity : PreferenceActivity() {
             } else if (preference is SwitchPreference) {
                 if (value as Boolean) {
                     enablePeriodicSync(preference.context)
+                    preference.setSummary("Disable auto sync")
                 } else {
                     disablePeriodicSync(preference.context)
+                    preference.setSummary("Enable auto sync")
                 }
             }
             true
@@ -112,8 +109,8 @@ class SettingsActivity : PreferenceActivity() {
     }
 
 
-    @SuppressLint("ValidFragment")
-    inner class GeneralPreferenceFragment : PreferenceFragment() {
+
+      class GeneralPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.pref_general)
@@ -127,7 +124,7 @@ class SettingsActivity : PreferenceActivity() {
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             val id = item.itemId
             if (id == android.R.id.home) {
-                onBackPressed()
+                activity.onBackPressed()
                 return true
             }
             return super.onOptionsItemSelected(item)

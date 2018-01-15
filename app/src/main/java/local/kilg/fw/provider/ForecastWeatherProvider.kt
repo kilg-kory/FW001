@@ -6,12 +6,8 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import android.util.Log
-import local.kilg.fw.R
 import local.kilg.fw.provider.ForecastWeatherContract.Forecast
 import org.jetbrains.anko.db.transaction
-import org.jetbrains.anko.defaultSharedPreferences
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by kilg
@@ -79,9 +75,13 @@ class ForecastWeatherProvider : ContentProvider() {
                 val country = uri.pathSegments[uri.pathSegments.size - 3]
                 val city = uri.pathSegments[uri.pathSegments.size - 2]
 
+                val selectionString = "strftime('%m%d', date(${Forecast.COLUMN.DATE}, 'unixepoch', 'localtime')) " +
+                        "= strftime('%m%d', date(?, 'unixepoch', 'localtime')) AND ${Forecast.COLUMN.COUNTRY_CITY} = ?"
+
+
                 context.database.readableDatabase.query(Forecast.TABLE_NAME,
                         projection,
-                        "${Forecast.COLUMN.DATE} = ? AND ${Forecast.COLUMN.COUNTRY_CITY} = ?",
+                        selectionString,
                         arrayOf(date, "$country/$city"),
                         null,
                         null,

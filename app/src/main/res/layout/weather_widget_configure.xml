@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <TextView
+        android:labelFor="@id/spn_cities"
+        android:id="@+id/tv_label_cities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/wc_label_cities" />
+
+    <Spinner
+        android:id="@+id/spn_cities"
+        android:entries="@array/pref_city_list_titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/chbx_use_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:checked="true"
+        android:text="@string/wc_use_background" />
+
+    <TextView
+        android:id="@+id/tv_label_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_color" />
+
+    <RadioGroup
+        android:id="@+id/rbg_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/rb_white"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/white" />
+
+        <RadioButton
+            android:id="@+id/rb_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/black" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_widget" />
+
+
+</LinearLayout>

@@ -26,4 +26,14 @@
         <item>RU/Moscow</item>
         <item>RU/Saint_Petersburg</item>
     </string-array>
+    <string name="appwidget_text">HELLO</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="wc_use_background">Use background</string>
+    <string name="wc_label_cities">City</string>
+    <string name="text_color">Text color</string>
+    <string name="white">white</string>
+    <string name="black">black</string>
+    <string name="temp_text_color">#FFFFFF</string>
+    <string name="weather_icon_content_description">weather icon</string>
 </resources>

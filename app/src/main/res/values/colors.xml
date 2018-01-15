@@ -4,4 +4,9 @@
     <color name="colorPrimaryDark">#277EA7</color>
     <color name="colorAccent">#3b820e</color>
     <color name="card_bgcolor" >#4db7ec</color>
+
+    <color name="temp_text_color">#FFFFFF</color>
+
+    <color name="widget_text_color_white">#FFFFFF</color>
+    <color name="widget_text_color_black">#000000</color>
 </resources>

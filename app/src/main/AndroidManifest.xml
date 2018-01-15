@@ -15,7 +15,7 @@
     <!-- Required for checkin state of connection to internet in first connect splash activity -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <permission android:name="local.kilg.fw.LOCAL_PERM"  />
+    <permission android:name="local.kilg.fw.LOCAL_PERM" />
 
     <application
         android:allowBackup="false"
@@ -24,7 +24,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -35,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".OneDayActivity"
             android:label="Put data day here"
@@ -45,7 +43,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".SplashActivity"
             android:parentActivityName=".MainActivity"
@@ -54,7 +51,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -65,12 +61,15 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <provider android:permission="local.kilg.fw.LOCAL_PERM"
+        <provider
             android:name=".provider.ForecastWeatherProvider"
             android:authorities="local.kilg.fw"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="local.kilg.fw.LOCAL_PERM" />
 
-        <service android:permission="local.kilg.fw.LOCAL_PERM" android:name=".network.sync.AuthenticatorService">
+        <service
+            android:name=".network.sync.AuthenticatorService"
+            android:permission="local.kilg.fw.LOCAL_PERM">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -79,9 +78,10 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-        <service android:permission="local.kilg.fw.LOCAL_PERM"
+        <service
             android:name=".network.sync.SyncAdapterService"
             android:exported="true"
+            android:permission="local.kilg.fw.LOCAL_PERM"
             android:process=":sync">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -92,6 +92,21 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <receiver android:name=".widget.WeatherWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info" />
+        </receiver>
+
+        <activity android:name=".widget.WeatherWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
